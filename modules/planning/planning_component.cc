@@ -132,6 +132,7 @@ bool PlanningComponent::Proc(
   local_view_.localization_estimate = localization_estimate;
   {
     std::lock_guard<std::mutex> lock(mutex_);
+    // 如果routing为空，或是新routing，更新routing
     if (!local_view_.routing ||
         hdmap::PncMap::IsNewRouting(*local_view_.routing, routing_)) {
       local_view_.routing =

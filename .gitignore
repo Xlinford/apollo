@@ -74,7 +74,7 @@ docs/demo_guide/*.record
 
 # Directory for binary distribution
 output
-
+build
 # Flamegraph files
 tools/FlameGraph
 

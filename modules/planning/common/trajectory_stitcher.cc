@@ -144,7 +144,7 @@ std::vector<TrajectoryPoint> TrajectoryStitcher::ComputeStitchingTrajectory(
     *replan_reason = "replan for empty previous trajectory.";
     return ComputeReinitStitchingTrajectory(planning_cycle_time, vehicle_state);
   }
-
+  // 在上一帧轨迹的相对时间=本轮规划开始时间戳-上一轮规划开始时间戳
   const double veh_rel_time =
       current_timestamp - prev_trajectory->header_time();
 
@@ -173,10 +173,10 @@ std::vector<TrajectoryPoint> TrajectoryStitcher::ComputeStitchingTrajectory(
     *replan_reason = "replan for previous trajectory missed path point";
     return ComputeReinitStitchingTrajectory(planning_cycle_time, vehicle_state);
   }
-
+  //在上一帧轨迹中找到离自车最近的轨迹点，遍历所有点的欧式距离
   size_t position_matched_index = prev_trajectory->QueryNearestPointWithBuffer(
       {vehicle_state.x(), vehicle_state.y()}, 1.0e-6);
-
+  //
   auto frenet_sd = ComputePositionProjection(
       vehicle_state.x(), vehicle_state.y(),
       prev_trajectory->TrajectoryPointAt(
@@ -214,7 +214,7 @@ std::vector<TrajectoryPoint> TrajectoryStitcher::ComputeStitchingTrajectory(
     ADEBUG << "replan according to certain amount of lat and lon offset is "
               "disabled";
   }
-
+  //拼接点的相对时间
   double forward_rel_time = veh_rel_time + planning_cycle_time;
 
   size_t forward_time_index =
